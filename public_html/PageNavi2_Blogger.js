@@ -6,24 +6,12 @@ var PageNavi_Blogger2 = PageNavi_Blogger2 || function() {
             "numPages" : 5,  // ページナビに表示する通常ページボタンの数。スタートページからエンドページまで。
             "window_width" : 320  // ウィンドウ幅がこのpx以下の時はページナビを必要に応じて2行に表示する。iPod touch 6を想定。
         },
-        buttuns : {  // ボタンから起動する関数。
-            redirect : function(pageNo) {  // ページ番号のボタンをクリックされた時に呼び出される関数。
-                vars.pageNo = pageNo;
-                if (vars.postLabel == "undefined") {vars.postLabel = false;}  // undefinedが文字列と解釈されているのを修正。
-                var startPost = (vars.pageNo - 1) * vars.perPage;  // 新たに表示する先頭ページの先頭になる投稿番号を取得。
-                var url;
-                if (vars.postLabel) { 
-                    url = "/feeds/posts/summary/-/" + vars.postLabel + "?start-index=" + startPost + "&max-results=1&alt=json-in-script&callback=PageNavi_Blogger2.callback.getURL";
-                } else {
-                    url = "/feeds/posts/summary?start-index=" + startPost + "&max-results=1&alt=json-in-script&callback=PageNavi_Blogger2.callback.getURL";
-                }
-                writeScript(url);
-            }
-        },
         callback : {  // フィードを受け取るコールバック関数。
             getURL : function(root){  // フィードからタイムスタンプを得て表示させるURLを作成してそこに移動する。
                 var post = root.feed.entry[0];  // フィードから先頭の投稿を取得。
-                var timestamp = encodeURIComponent( post.published.$t.substring(0, 19) + post.published.$t.substring(23, 29));  // 先頭の投稿からタイプスタンプを取得。
+                // var timestamp = encodeURIComponent(post.published.$t.substring(0, 19) + post.published.$t.substring(23, 29));  // 先頭の投稿からタイプスタンプを取得。
+                var m = /(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d)\.\d\d\d(.\d\d:\d\d)/i.exec(post.published.$t);
+                var timestamp = encodeURIComponent(m[1] + m[2]);  // 先頭の投稿からタイプスタンプを取得。
                 var addr_label = "/search/label/" + vars.postLabel + "?updated-max=" + timestamp + "&max-results=" + vars.perPage + "#PageNo=" + vars.pageNo;
                 var addr_page = "/search?updated-max=" + timestamp + "&max-results=" + vars.perPage + "#PageNo=" + vars.pageNo; 
                 location.href =(vars.postLabel)?addr_label:addr_page;  // ラベルインデックスページとインデックスページでURLが異なることへの対応。
@@ -52,6 +40,18 @@ var PageNavi_Blogger2 = PageNavi_Blogger2 || function() {
         elements : [],  // ページナビを挿入するhtmlの要素の配列。
         buttunElems : []  // ボタン要素を入れる配列。
     };
+    function redirect(pageNo) {  // ページ番号のボタンをクリックされた時に呼び出される関数。
+        vars.pageNo = pageNo;
+        if (vars.postLabel == "undefined") {vars.postLabel = false;}  // undefinedが文字列と解釈されているのを修正。
+        var startPost = (vars.pageNo - 1) * vars.perPage;  // 新たに表示する先頭ページの先頭になる投稿番号を取得。
+        var url;
+        if (vars.postLabel) { 
+            url = "/feeds/posts/summary/-/" + vars.postLabel + "?start-index=" + startPost + "&max-results=1&alt=json-in-script&callback=PageNavi_Blogger2.callback.getURL";
+        } else {
+            url = "/feeds/posts/summary?start-index=" + startPost + "&max-results=1&alt=json-in-script&callback=PageNavi_Blogger2.callback.getURL";
+        }
+        writeScript(url);
+    }
     function createElem(tag){  // tagの要素を作成して返す。
        return document.createElement(tag); 
     }   
@@ -103,8 +103,7 @@ var PageNavi_Blogger2 = PageNavi_Blogger2 || function() {
         spanNode.firstChild.href = "#";
         //spanNode.firstChild.onclick = function(){alert("ボタン");};
         spanNode.firstChild.onclick = function() {
-            pg.buttuns.redirect(pageNo,vars.perPage,vars.postLabel);
-            //alert("ボタン");
+            redirect(pageNo,vars.perPage,vars.postLabel);
             return false;
         }; // vars.postLabelは文字列なので、クオーテーションが必要。undefinedも文字列として解釈される。
         return spanNode;
@@ -134,15 +133,16 @@ var PageNavi_Blogger2 = PageNavi_Blogger2 || function() {
         document.getElementsByTagName('head')[0].appendChild(ws);
     };
     function writeHtml(pageStart, pageEnd, lastPageNo) {  // htmlの書き込み。
-        var divNode = createElem('div');
-        vars.buttunElems.forEach(function(b){divNode.appendChild(b);});
+        //var divNode = createElem('div');
+        //vars.buttunElems.forEach(function(b){divNode.appendChild(b);});
         vars.elements.forEach(function(e){
             // var dupNode = divNode.cloneNode(true);
-            var dupNode = divNode;
-            e.appendChild(dupNode);
-            
-//            e.appendChild(divNode);
-            
+            // var dupNode = divNode;
+            //e.appendChild(dupNode);
+            e.textContent = null;
+            var divNode = createElem('div');
+            vars.buttunElems.forEach(function(b){divNode.appendChild(b);});
+            e.appendChild(divNode);
         });  // 要素を書き換え。
         //
         //
@@ -181,5 +181,5 @@ var PageNavi_Blogger2 = PageNavi_Blogger2 || function() {
 //PageNavi_Blogger2.defaults["perPage"] = 10 //1ページあたりの投稿数。
 //PageNavi_Blogger2.defaults["numPages"] = 5 // ページナビに表示するページ数。
 //PageNavi_Blogger2.defaults["window_width"] = 320 // ウィンドウ幅がこの幅px以下の時はページナビを2行にする。
-//PageNavi_Blogger2.all(["blog-pager","blog-pager2"]);  // ページナビの起動。引き数にHTMLの要素のidを配列で入れる。
-PageNavi_Blogger2.all(["blog-pager"]);  // ページナビの起動。引き数にHTMLの要素のidを配列で入れる。
+PageNavi_Blogger2.all(["blog-pager","blog-pager2"]);  // ページナビの起動。引き数にHTMLの要素のidを配列で入れる。
+//PageNavi_Blogger2.all(["blog-pager"]);  // ページナビの起動。引き数にHTMLの要素のidを配列で入れる。
