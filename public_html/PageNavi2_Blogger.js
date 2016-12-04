@@ -133,16 +133,19 @@ var PageNavi_Blogger2 = PageNavi_Blogger2 || function() {
         document.getElementsByTagName('head')[0].appendChild(ws);
     };
     function writeHtml(pageStart, pageEnd, lastPageNo) {  // htmlの書き込み。
-        //var divNode = createElem('div');
-        //vars.buttunElems.forEach(function(b){divNode.appendChild(b);});
+        var divNode = createElem('div');
+        vars.buttunElems.forEach(function(b){divNode.appendChild(b);});
         vars.elements.forEach(function(e){
+            var dupNode = createElem('div');
+            dupNode.appendChild(Object.create(divNode));
+            e.appendChild(dupNode);
             // var dupNode = divNode.cloneNode(true);
             // var dupNode = divNode;
             //e.appendChild(dupNode);
-            e.textContent = null;
-            var divNode = createElem('div');
-            vars.buttunElems.forEach(function(b){divNode.appendChild(b);});
-            e.appendChild(divNode);
+//            e.textContent = null;
+//            var divNode = createElem('div');
+//            vars.buttunElems.forEach(function(b){divNode.appendChild(b);});
+//            e.appendChild(divNode);
         });  // 要素を書き換え。
         //
         //
