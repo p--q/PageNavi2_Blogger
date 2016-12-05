@@ -143,10 +143,10 @@ var PageNavi_Blogger2 = PageNavi_Blogger2 || function() {
             dupNode.childNodes.forEach(function(n) {
                 c = n.firstChild;
                 if(c.name) {
-                    c.onclick = function() {
+                    c.onclick = Object.create(function() {
                         redirect(c.name);
                         return false;
-                    };
+                    });
                 }
             });
             e.appendChild(dupNode);
@@ -209,3 +209,27 @@ var PageNavi_Blogger2 = PageNavi_Blogger2 || function() {
 //PageNavi_Blogger2.defaults["window_width"] = 320 // ウィンドウ幅がこの幅px以下の時はページナビを2行にする。
 PageNavi_Blogger2.all(["blog-pager","blog-pager2"]);  // ページナビの起動。引き数にHTMLの要素のidを配列で入れる。
 //PageNavi_Blogger2.all(["blog-pager"]);  // ページナビの起動。引き数にHTMLの要素のidを配列で入れる。
+
+
+
+
+
+formObject.onclick = function(e)
+{
+    e=e||event; // IE sucks
+    var target = e.target||e.srcElement; // and sucks again
+
+    // target is the element that has been clicked
+    if (target && target.className=='remove') 
+    {
+        target.parentNode.parentNode.removeChild(target.parentNode);
+        return false; // stop event from bubbling elsewhere
+    }
+}
+
++
+
+<div>
+  <input…>
+  <button type=button class=remove>Remove without JS handler!</button>
+</div>
