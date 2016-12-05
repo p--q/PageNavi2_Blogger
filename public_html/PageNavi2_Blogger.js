@@ -9,7 +9,6 @@ var PageNavi_Blogger2 = PageNavi_Blogger2 || function() {
         callback : {  // フィードを受け取るコールバック関数。
             getURL : function(root){  // フィードからタイムスタンプを得て表示させるURLを作成してそこに移動する。
                 var post = root.feed.entry[0];  // フィードから先頭の投稿を取得。
-                // var timestamp = encodeURIComponent(post.published.$t.substring(0, 19) + post.published.$t.substring(23, 29));  // 先頭の投稿からタイプスタンプを取得。
                 var m = /(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d)\.\d\d\d(.\d\d:\d\d)/i.exec(post.published.$t);
                 var timestamp = encodeURIComponent(m[1] + m[2]);  // 先頭の投稿からタイプスタンプを取得。
                 var addr_label = "/search/label/" + vars.postLabel + "?updated-max=" + timestamp + "&max-results=" + vars.perPage + "#PageNo=" + vars.pageNo;
@@ -38,7 +37,8 @@ var PageNavi_Blogger2 = PageNavi_Blogger2 || function() {
         pageNo : null,  // ページ番号。
         currentPageNo : null,  // 現在のページ番号。
         elements : [],  // ページナビを挿入するhtmlの要素の配列。
-        buttunElems : []  // ボタン要素を入れる配列。
+        buttunElems : [],  // ボタン要素を入れる配列。
+        buttunFun : []  // ボタンのonclick属性を収納する配列。
     };
     function redirect(pageNo) {  // ページ番号のボタンをクリックされた時に呼び出される関数。
         vars.pageNo = pageNo;
@@ -101,11 +101,12 @@ var PageNavi_Blogger2 = PageNavi_Blogger2 || function() {
         //ボタンから起動する関数はグローバルスコープから呼ばれるのでpgではなくPageNavi_Blogger2で呼び出す。
         var spanNode = createButtonNode(text);      
         spanNode.firstChild.href = "#";
-        //spanNode.firstChild.onclick = function(){alert("ボタン");};
-        spanNode.firstChild.onclick = function() {
-            redirect(pageNo,vars.perPage,vars.postLabel);
-            return false;
-        }; // vars.postLabelは文字列なので、クオーテーションが必要。undefinedも文字列として解釈される。
+        spanNode.firstChild.name = pageNo;
+        //spanNode.firstChild.onclick = function() {
+//        vas.buttonFun.push(function() {
+//            redirect(pageNo,vars.perPage,vars.postLabel);
+//            return false;
+//        }); // vars.postLabelは文字列なので、クオーテーションが必要。undefinedも文字列として解釈される。
         return spanNode;
     }
     function createFirstPageButton(text) {  // 1メージ目のボタンのhtmlを返す。ボタン表示は1かジャンプ矢印になる。
@@ -133,15 +134,37 @@ var PageNavi_Blogger2 = PageNavi_Blogger2 || function() {
         document.getElementsByTagName('head')[0].appendChild(ws);
     };
     function writeHtml(pageStart, pageEnd, lastPageNo) {  // htmlの書き込み。
+        var dupNode;
+        var c;
         var divNode = createElem('div');
         vars.buttunElems.forEach(function(b){divNode.appendChild(b);});
         vars.elements.forEach(function(e){
-            var dupNode = createElem('div');
-            dupNode.appendChild(Object.create(divNode));
+            dupNode = divNode.cloneNode(true);
+            dupNode.childNodes.forEach(function(n) {
+                c = n.firstChild;
+                if(c.name) {
+                    c.onclick = function() {
+                        redirect(c.name);
+                        return false;
+                    };
+                }
+            });
             e.appendChild(dupNode);
-            // var dupNode = divNode.cloneNode(true);
-            // var dupNode = divNode;
-            //e.appendChild(dupNode);
+            
+            
+//            vars.buttunElems.forEach(function(b){divNode.appendChild(b);});
+            
+            
+//            var dupNode = createElem('div');
+//            dupNode.appendChild(Object.create(divNode));
+//            e.appendChild(dupNode);
+             //var dupNode = divNode.cloneNode(true);
+//             var dupNode = divNode;
+            //dupNode.childelements.forEach(vas.buttonFun.forEach(function(b){.firstChild.onclick = );
+            
+            
+            
+//            e.appendChild(dupNode);
 //            e.textContent = null;
 //            var divNode = createElem('div');
 //            vars.buttunElems.forEach(function(b){divNode.appendChild(b);});
