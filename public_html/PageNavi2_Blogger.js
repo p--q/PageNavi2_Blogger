@@ -42,14 +42,18 @@ var PageNavi2_Blogger = PageNavi2_Blogger || function() {
     function redirect(pageNo) {  // ページ番号のボタンをクリックされた時に呼び出される関数。
         vars.pageNo = pageNo;
         if (vars.postLabel == "undefined") {vars.postLabel = false;}  // undefinedが文字列と解釈されているのを修正。
-        var startPost = (vars.pageNo - 1) * vars.perPage;  // 新たに表示する先頭ページの先頭になる投稿番号を取得。
-        var url;
-        if (vars.postLabel) { 
-            url = "/feeds/posts/summary/-/" + vars.postLabel + "?start-index=" + startPost + "&max-results=1&alt=json-in-script&callback=PageNavi2_Blogger.callback.getURL";
+        if (pageNo==1) {
+            location.href = (!vars.postLabel)?"/":"/search/label/" + vars.postLabel + "?max-results=" + vars.perPage;
         } else {
-            url = "/feeds/posts/summary?start-index=" + startPost + "&max-results=1&alt=json-in-script&callback=PageNavi2_Blogger.callback.getURL";
+            var startPost = (vars.pageNo - 1) * vars.perPage;  // 新たに表示する先頭ページの先頭になる投稿番号を取得。
+            var url;
+            if (vars.postLabel) { 
+                url = "/feeds/posts/summary/-/" + vars.postLabel + "?start-index=" + startPost + "&max-results=1&alt=json-in-script&callback=PageNavi2_Blogger.callback.getURL";
+            } else {
+                url = "/feeds/posts/summary?start-index=" + startPost + "&max-results=1&alt=json-in-script&callback=PageNavi2_Blogger.callback.getURL";
+            }
+            writeScript(url);
         }
-        writeScript(url);
     }
     function createElem(tag){  // tagの要素を作成して返す。
        return document.createElement(tag); 
@@ -97,17 +101,12 @@ var PageNavi2_Blogger = PageNavi2_Blogger || function() {
         }
     };    
     function createButton(pageNo, text) {  // redirectするボタンの作成。
-        //ボタンから起動する関数はグローバルスコープから呼ばれるのでpgではなくPageNavi2_Bloggerで呼び出す。
         var spanNode = createElem('span');
         spanNode.className = "displaypageNum";
         spanNode.appendChild(createElem('a'));
         spanNode.firstChild.textContent = text;
-        if(pageNo==1) { // 1メージ目のボタンのNodeを返す。ボタン表示は1かジャンプ矢印になる。
-            spanNode.firstChild.href = (!vars.postLabel)?"/":"/search/label/" + vars.postLabel + "?max-results=" + vars.perPage;
-        } else {  // 1ページ目以外のボタンの作成。
-            spanNode.firstChild.href = "#";
-            spanNode.firstChild.name = pageNo;  // redirect()の引数に使う。
-        }
+        spanNode.firstChild.href = "#";
+        spanNode.firstChild.name = pageNo;  // redirect()の引数に使う。
         return spanNode;
     }
     function createCurrentNode(j) {
@@ -122,25 +121,22 @@ var PageNavi2_Blogger = PageNavi2_Blogger || function() {
         ws.src = url;
         document.getElementsByTagName('head')[0].appendChild(ws);
     };
-    
-    
-    
+    function onclickEvent(e) {
+        e=e||event; // IE sucks
+        var target = e.target||e.srcElement; // targetはaになる。// and sucks again // target is the element that has been clicked
+        if (target && target.parentNode.className=="displaypageNum") {
+            redirect(target.name);
+            return false; // stop event from bubbling elsewhere
+        }
+    }
     function writeHtml(pageStart, pageEnd, lastPageNo) {  // htmlの書き込み。
         var divNode = createElem('div');
         vars.buttunElems.forEach(function(b){divNode.appendChild(b);});
         var dupNode;
         vars.elements.forEach(function(elem){
             dupNode = divNode.cloneNode(true);
-            dupNode.onclick = function(e) {
-                e=e||event; // IE sucks
-                var target = e.target||e.srcElement; // targetはaになる。// and sucks again
-                // target is the element that has been clicked
-                if (target && target.parentNode.className=="displaypageNum") {
-                    redirect(target.name);
-                    return false; // stop event from bubbling elsewhere
-                }
-            };
-        elem.appendChild(dupNode);
+            dupNode.onclick = onclickEvent;
+            elem.appendChild(dupNode);
         });  // 要素を書き換え。
     };
     return pg;
