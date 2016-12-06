@@ -37,7 +37,7 @@ var PageNavi2_Blogger = PageNavi2_Blogger || function() {
         pageNo : null,  // ページ番号。
         currentPageNo : null,  // 現在のページ番号。
         elements : [],  // ページナビを挿入するhtmlの要素の配列。
-        buttunElems : [],  // ボタン要素を入れる配列。
+        buttunElems : [] // ボタン要素を入れる配列。
     };
     function redirect(pageNo) {  // ページ番号のボタンをクリックされた時に呼び出される関数。
         vars.pageNo = pageNo;  // 表示するページ番号
@@ -111,7 +111,7 @@ var PageNavi2_Blogger = PageNavi2_Blogger || function() {
     }
     function createCurrentNode(j) {  // 現在表示中のページのノード作成。
         var spanNode = createElem('span');
-        spanNode.className = "pagecurrent";        
+        spanNode.className = "pagecurrent"; 
         spanNode.textContent = j;
         return spanNode;
     }
@@ -134,9 +134,20 @@ var PageNavi2_Blogger = PageNavi2_Blogger || function() {
         vars.buttunElems.forEach(function(b){divNode.appendChild(b);});  // ボタンノードを新しいdivノードの子ノードに追加する。
         var dupNode;
         vars.elements.forEach(function(elem){
-            dupNode = divNode.cloneNode(true);  // ボタンノードを子ノードとするdivノードを複製する。デフォルトのプロパティしかコピーされない。イベントもコピーされない。
-            dupNode.onclick = onclickEvent;  // 複製したノードにイベントのプロパティを追加する。
-            elem.appendChild(dupNode);  // 既存のノードに追加して表示させる。
+            divNode.onclick = onclickEvent;
+            divNode.style.display = "flex";
+            divNode.style.justifyContent = "center";
+            divNode.style.alignItems = "center";
+                    
+            
+            divNode.style.transform = "scaleX(0.9)";
+            
+            elem.appendChild(divNode); 
+            
+            
+//            dupNode = divNode.cloneNode(true);  // ボタンノードを子ノードとするdivノードを複製する。デフォルトのプロパティしかコピーされない。イベントもコピーされない。
+//            dupNode.onclick = onclickEvent;  // 複製したノードにイベントのプロパティを追加する。
+//            elem.appendChild(dupNode);  // 既存のノードに追加して表示させる。
         });  // 要素を書き換え。
     };
     return pg;  // グローバルスコープにだす。
@@ -145,5 +156,6 @@ var PageNavi2_Blogger = PageNavi2_Blogger || function() {
 //PageNavi2_Blogger.defaults["perPage"] = 10 //1ページあたりの投稿数。
 //PageNavi2_Blogger.defaults["numPages"] = 5 // ページナビに表示するページ数。
 //PageNavi2_Blogger.defaults["window_width"] = 320 // ウィンドウ幅がこの幅px以下の時はページナビを2行にする。
-PageNavi2_Blogger.all(["blog-pager","blog-pager2"]);  // ページナビの起動。引き数にHTMLの要素のidを配列で入れる。
+//PageNavi2_Blogger.all(["blog-pager","blog-pager2"]);  // ページナビの起動。引き数にHTMLの要素のidを配列で入れる。
 //PageNavi2_Blogger.all(["blog-pager"]);  // ページナビの起動。引き数にHTMLの要素のidを配列で入れる。
+PageNavi2_Blogger.all(["blog-pager2"]);
