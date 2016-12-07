@@ -1,9 +1,18 @@
-#blog-pager{clear:both;margin:30px auto;text-align: center;padding: 7px;}
-#blog-pager2{clear:both;text-align: center;padding: 7px;overflow: hidden;}
+#blog-pager{
+    clear:both;
+    margin:30px auto;
+    text-align: center;
+    padding: 7px;}
+#blog-pager2{
+    clear:both;
+    text-align: center;
+/*    padding: 7px;*/
+    overflow: hidden;}
 .blog-pager {background: none;}
 .displaypageNum a,.showpage a,.pagecurrent{
     padding: 5px 10px;
-    margin-right:5px; 
+    /*margin-right:5px;*/ 
+    margin: 6px 2px;
     color: #fff; 
     background-color:#2973FC;
     -webkit-box-shadow: 0px 5px 3px -1px rgba(50, 50, 50, 0.53);
