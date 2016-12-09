@@ -3,7 +3,7 @@ var PageNavi2_Blogger = PageNavi2_Blogger || function() {
     var pg = {  // グローバルスコープに出すオブジェクト。グローバルスコープから呼び出すときはPageNavi2_Bloggerになる。
         defaults : {  // 既定値。
             "perPage" : 10, //1ページあたりの投稿数。
-            "numPages" : 5,  // ページナビに表示する通常ページボタンの数。スタートページからエンドページまで。
+            "numPages" : 5  // ページナビに表示する通常ページボタンの数。スタートページからエンドページまで。
         },
         callback : {  // フィードを受け取るコールバック関数。
             getURL : function(root){  // フィードからタイムスタンプを得て表示させるURLを作成してそこに移動する。
@@ -34,7 +34,7 @@ var PageNavi2_Blogger = PageNavi2_Blogger || function() {
         postLabel : null,  // ラベル名。
         pageNo : null,  // ページ番号。
         currentPageNo : null,  // 現在のページ番号。
-        elements : [],  // ページナビを挿入するhtmlの要素の配列。
+        elements : []  // ページナビを挿入するhtmlの要素の配列。
     };
     function redirect(pageNo) {  // ページ番号のボタンをクリックされた時に呼び出される関数。
         vars.pageNo = pageNo;  // 表示するページ番号
@@ -129,18 +129,13 @@ var PageNavi2_Blogger = PageNavi2_Blogger || function() {
     function writeHtml(buttunElems) {  // htmlの書き込み。
         var divNode = createElem('div');       
         buttunElems.forEach(function(b){
-//            b.style.flexShrink = "1";
             divNode.appendChild(b);
         });  // ボタンノードを新しいdivノードの子ノードに追加する。
+        divNode.style.padding = "0px 5px";
         divNode.style.display = "flex";  // flexの子要素はdivにする。spanはダメ。
-        divNode.style.justifyContent = "center";  // ボタンを右寄せにする
+        divNode.style.justifyContent = "center";  // ボタンを中央寄せにする
         divNode.style.alignItems = "center";  // これがないと現在のページのボタンがずれる。
-        divNode.style.transform = "scaleX(0.9)";
-//        divNode.style.flexWrap = "wrap";  // ボタンを折り返す。   
-//        var divNode2 = createElem('div');  // ボタンを折り返しても中央表示されるようにflexboxを入れ子にする。
-//        divNode2.appendChild(divNode);
-//        divNode2.style.display = "flex"; 
-//        divNode2.style.justifyContent = "center";
+        divNode.style.transform = "scaleX(0.9)";  // 水平方向に0.9倍にする。
         var dupNode;
         vars.elements.forEach(function(elem){
             dupNode = divNode.cloneNode(true);  // ボタンノードを子ノードとするdivノードを複製する。デフォルトのプロパティしかコピーされない。イベントもコピーされない。
