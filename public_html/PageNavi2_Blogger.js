@@ -84,6 +84,7 @@ var PageNavi2_Blogger = PageNavi2_Blogger || function() {
     function createPageNavi() {  // URLからラベル名と現在のページ番号を得、その後総投稿数を得るためのフィードを取得する。
         var thisUrl = location.href;  // 現在表示しているURL。
         if (/\/search\/label\//i.test(thisUrl)) {  // ラベルインデックスページの場合URLからラベル名を取得。
+            thisUrl = thisUrl.replace("m=0?","");  // モバイルデバイスからウェブバージョンを見た時の文字列を削除。
             vars.postLabel = /\/search\/label\/(.+)(?=\?)/i.exec(thisUrl)[1];  // 後読みは未実装の可能性あるので使わない。
         } 
         if (!/\?q=|\.html$/i.test(thisUrl)) {  // 検索結果や固定ページではないとき。
