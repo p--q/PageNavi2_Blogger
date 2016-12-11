@@ -2,7 +2,7 @@
 var PageNavi2_Blogger = PageNavi2_Blogger || function() {
     var pg = {  // グローバルスコープに出すオブジェクト。グローバルスコープから呼び出すときはPageNavi2_Bloggerになる。
         defaults : {  // 既定値。
-            "perPage" : 10, //1ページあたりの投稿数。
+            "perPage" : 7, //1ページあたりの投稿数。1ページの容量が1MBを超えないように設定する。
             "numPages" : 5  // ページナビに表示する通常ページボタンの数。スタートページからエンドページまで。
         },
         callback : {  // フィードを受け取るコールバック関数。
@@ -138,6 +138,7 @@ var PageNavi2_Blogger = PageNavi2_Blogger || function() {
         divNode.style.transform = "scaleX(0.9)";  // 水平方向に0.9倍にする。
         var dupNode;
         vars.elements.forEach(function(elem){
+            elem.textContent = null;  // 要素を初期化。
             dupNode = divNode.cloneNode(true);  // ボタンノードを子ノードとするdivノードを複製する。デフォルトのプロパティしかコピーされない。イベントもコピーされない。
             dupNode.onclick = onclickEvent;  // 複製したノードにイベントのプロパティを追加する。
             elem.appendChild(dupNode);   // 既存のノードに追加して表示させる。
