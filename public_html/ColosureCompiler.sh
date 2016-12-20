@@ -1,0 +1,1 @@
+java -jar ~/closure-compiler/compiler.jar --js PageNavi2_Blogger.js  --js_output_file PageNavi2_Blogger.min.js

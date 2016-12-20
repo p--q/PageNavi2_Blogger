@@ -1,0 +1,1 @@
+java -jar ~/closure-compiler/closure-stylesheets.jar pagenavi.css > pagenavi.min.css
