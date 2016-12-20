@@ -104,7 +104,7 @@ var PageNavi2_Blogger = PageNavi2_Blogger || function() {
         spanNode.appendChild(createElem('a'));
         spanNode.firstChild.textContent = text;
         spanNode.firstChild.href = "#";
-        spanNode.firstChild.name = pageNo;  // redirect()の引数に使う。
+        spanNode.firstChild.title = pageNo;  // redirect()の引数に使う。
         return spanNode;
     }
     function createCurrentNode(j) {  // 現在表示中のページのノード作成。
@@ -123,7 +123,7 @@ var PageNavi2_Blogger = PageNavi2_Blogger || function() {
         e=e||event; // IE sucks
         var target = e.target||e.srcElement; // targetはaになる。// and sucks again // target is the element that has been clicked
         if (target && target.parentNode.className=="displaypageNum") {
-            redirect(target.name);
+            redirect(target.title);
             return false; // stop event from bubbling elsewhere
         }
     }
