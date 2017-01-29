@@ -2,7 +2,8 @@
 var PageNavi2_Blogger = PageNavi2_Blogger || function() {
     var pg = {  // グローバルスコープに出すオブジェクト。グローバルスコープから呼び出すときはPageNavi2_Bloggerになる。
         defaults : {  // 既定値。
-            "perPage" : 7, //1ページあたりの投稿数。1ページの容量が1MBを超えないように設定する。
+            "FirstPagePosts": 3,  // 1ページ目に表示されている
+            "perPage" : 7, //1ページあたりの投稿数。
             "numPages" : 5  // ページナビに表示する通常ページボタンの数。スタートページからエンドページまで。
         },
         callback : {  // フィードを受け取るコールバック関数。
