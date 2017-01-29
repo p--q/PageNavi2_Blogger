@@ -151,7 +151,7 @@ var PageNavi2_Blogger = PageNavi2_Blogger || function() {
     return pg;  // グローバルスコープにだす。
 }();
 //デフォルト値を変更したいときは以下のコメントアウトをはずして設定する。
-//PageNavi2_Blogger.defaults["firstPagePosts"] = 10 //1ページあたりの投稿数。
-//PageNavi2_Blogger.defaults["perPage"] = 10 //1ページあたりの投稿数。
+//PageNavi2_Blogger.defaults["firstPagePosts"] = 3 //1ページあたりの投稿数。
+//PageNavi2_Blogger.defaults["perPage"] = 7 //1ページあたりの投稿数。
 //PageNavi2_Blogger.defaults["numPages"] = 5 // ページナビに表示するページ数。
 PageNavi2_Blogger.all(["blog-pager","blog-pager2"]);  // ページナビの起動。引き数にHTMLの要素のidを配列で入れる。
