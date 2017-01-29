@@ -2,7 +2,7 @@
 var PageNavi2_Blogger = PageNavi2_Blogger || function() {
     var pg = {  // グローバルスコープに出すオブジェクト。グローバルスコープから呼び出すときはPageNavi2_Bloggerになる。
         defaults : {  // 既定値。
-            "firstPagePosts": 3,  // 1ページ目に表示されている投稿数。1ページ目に表示されている最終投稿の次の投稿を2ページ目の先頭投稿にする。
+            "FirstPagePosts": 3,  // 1ページ目に表示されている
             "perPage" : 7, //1ページあたりの投稿数。
             "numPages" : 5  // ページナビに表示する通常ページボタンの数。スタートページからエンドページまで。
         },
@@ -29,7 +29,6 @@ var PageNavi2_Blogger = PageNavi2_Blogger || function() {
         }
     }; // end of pg
     var vars = {  // PageNavi2_Bloggerモジュール内の"グローバル"変数。
-        firstPagePosts : pg.defaults.firstPagePosts,  // デフォルト値の取得。
         perPage : pg.defaults.perPage,  // デフォルト値の取得。
         numPages : pg.defaults.numPages,  // デフォルト値の取得。
         jumpPages : pg.defaults.numPages, // ジャンプボタンでページ番号が総入れ替えになる設定値。
@@ -40,10 +39,10 @@ var PageNavi2_Blogger = PageNavi2_Blogger || function() {
     };
     function redirect(pageNo) {  // ページ番号のボタンをクリックされた時に呼び出される関数。
         vars.pageNo = pageNo;  // 表示するページ番号
-        if (pageNo==1) {  // 1ページ目を取得するときはページ番号からURLを算出する必要がない。その代わり1MBの制限で投稿数が制限される。
+        if (pageNo==1) {  // 1ページ目を取得するときはページ番号からURLを算出する必要がない。
             location.href = (!vars.postLabel)?"/":"/search/label/" + vars.postLabel + "?max-results=" + vars.perPage;  // ラベルページインデックスの場合分け。
-        } else {  // 2ページ以降のとき
-            var startPost = vars.firstPagePosts + (vars.pageNo - 2) * vars.perPage;  // 新たに表示する先頭ページの先頭になる投稿番号を取得。
+        } else {
+            var startPost = (vars.pageNo - 1) * vars.perPage;  // 新たに表示する先頭ページの先頭になる投稿番号を取得。
             var url;
             if (vars.postLabel) {   // ラベルページインデックスの場合分け。
                 url = "/feeds/posts/summary/-/" + vars.postLabel + "?start-index=" + startPost + "&max-results=1&alt=json-in-script&callback=PageNavi2_Blogger.callback.getURL";
@@ -64,15 +63,14 @@ var PageNavi2_Blogger = PageNavi2_Blogger || function() {
         var diff =  Math.floor(numPages / 2);  // スタートページ - 現在のページ = diff。
         var pageStart = vars.currentPageNo - diff;  // スタートページの算出。
         if (pageStart < 1) {pageStart = 1;}  // スタートページが1より小さい時はスタートページを1にする。
-        var lastPageNo = 1 + Math.ceil((total_posts-vars.firstPagePosts) / vars.perPage); // 総投稿数から総ページ数を算出。1ページ目だけ投稿数が異なる。
+        var lastPageNo = Math.ceil(total_posts / vars.perPage); // 総投稿数から総ページ数を算出。
         var pageEnd = pageStart + numPages - 1;  // エンドページの算出。
         if (pageEnd > lastPageNo) {pageEnd = lastPageNo;} // エンドページが総ページ数より大きい時はエンドページを総ページ数にする。
         if (pageStart > 1) {buttunElems.push(createButton(1,1));}  // スタートページが2以上のときはスタートページより左に1ページ目のボタンを作成する。
         if (pageStart == 3) {buttunElems.push(createButton(2, 2));} // スタートページが3のときはジャンプボタンの代わりに2ページ目のボタンを作成する。
         if (pageStart > 3) {  // スタートページが4以上のときはジャンプボタンを作成する。
             var prevNumber = pageStart - vars.jumpPages + diff;  // ジャンプボタンでジャンプしたときに表示するページ番号。
-            if (prevNumber < 1) {prevNumber = 1;}  // 1より小さい時は1にする。
-            buttunElems.push(createButton(prevNumber, prevText));  // ボタンの作成。
+            (prevNumber < 2)?buttunElems.push(createButton(1,prevText)):buttunElems.push(createButton(prevNumber, prevText));  // ページ番号が1のときだけボタンの作り方が異なるための場合分け。
         }
         for (var j = pageStart; j <= pageEnd; j++) {buttunElems.push((j == vars.currentPageNo)?createCurrentNode(j):createButton(j, j));}  // スタートボタンからエンドボタンまで作成。
         if (pageEnd == lastPageNo - 2) {buttunElems.push(createButton(lastPageNo - 1, lastPageNo - 1));}  // エンドページと総ページ数の間に1ページしかないときは右ジャンプボタンは作成しない。
@@ -151,7 +149,6 @@ var PageNavi2_Blogger = PageNavi2_Blogger || function() {
     return pg;  // グローバルスコープにだす。
 }();
 //デフォルト値を変更したいときは以下のコメントアウトをはずして設定する。
-//PageNavi2_Blogger.defaults["firstPagePosts"] = 3 //1ページ目の投稿数。
 //PageNavi2_Blogger.defaults["perPage"] = 10 //1ページあたりの投稿数。
 //PageNavi2_Blogger.defaults["numPages"] = 5 // ページナビに表示するページ数。
 PageNavi2_Blogger.all(["blog-pager","blog-pager2"]);  // ページナビの起動。引き数にHTMLの要素のidを配列で入れる。
