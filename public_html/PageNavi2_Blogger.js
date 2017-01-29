@@ -90,7 +90,7 @@ var PageNavi2_Blogger = PageNavi2_Blogger || function() {
             thisUrl = thisUrl.replace("m=0?","");  // モバイルデバイスからウェブバージョンを見た時の文字列を削除。
             vars.postLabel = /\/search\/label\/(.+)(?=\?)/i.exec(thisUrl)[1];  // 後読みは未実装の可能性あるので使わない。
         } 
-        if (!/\?q=|\.html$/i.test(thisUrl)) {  // 検索結果や固定ページではないとき。
+        if (!/\?q=|\.html$|updated-min=/i.test(thisUrl)) {  // 検索結果や固定ページやアーカイブページではないとき。
             vars.currentPageNo = (/#PageNo=/i.test(thisUrl))?/#PageNo=(\d+)/i.exec(thisUrl)[1]:1;  // URLから現在のページ番号の取得。
             var url;  // フィードを取得するためのURL。
             if (vars.postLabel) {  // 総投稿数取得のためにフィードを取得するURLの作成。ラベルインデックスのときはそのラベル名の総投稿数を取得するため。
