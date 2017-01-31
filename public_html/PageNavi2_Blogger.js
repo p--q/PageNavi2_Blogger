@@ -69,7 +69,8 @@ var PageNavi2_Blogger = PageNavi2_Blogger || function() {
         if (pageStart == 3) {buttunElems.push(createButton(2, 2));} // スタートページが3のときはジャンプボタンの代わりに2ページ目のボタンを作成する。
         if (pageStart > 3) {  // スタートページが4以上のときはジャンプボタンを作成する。
             var prevNumber = pageStart - vars.jumpPages + diff;  // ジャンプボタンでジャンプしたときに表示するページ番号。
-            (prevNumber < 2)?buttunElems.push(createButton(1,prevText)):buttunElems.push(createButton(prevNumber, prevText));  // ページ番号が1のときだけボタンの作り方が異なるための場合分け。
+            if (prevNumber < 1) {prevNumber = 1;}
+            buttunElems.push(createButton(prevNumber, prevText));  // ページ番号が1のときだけボタンの作り方が異なるための場合分け。
         }
         for (var j = pageStart; j <= pageEnd; j++) {buttunElems.push((j == vars.currentPageNo)?createCurrentNode(j):createButton(j, j));}  // スタートボタンからエンドボタンまで作成。
         if (pageEnd == lastPageNo - 2) {buttunElems.push(createButton(lastPageNo - 1, lastPageNo - 1));}  // エンドページと総ページ数の間に1ページしかないときは右ジャンプボタンは作成しない。
@@ -87,7 +88,7 @@ var PageNavi2_Blogger = PageNavi2_Blogger || function() {
             thisUrl = thisUrl.replace("m=0?","");  // モバイルデバイスからウェブバージョンを見た時の文字列を削除。
             vars.postLabel = /\/search\/label\/(.+)(?=\?)/i.exec(thisUrl)[1];  // 後読みは未実装の可能性あるので使わない。
         } 
-        if (!/\?q=|\.html$/i.test(thisUrl)) {  // 検索結果や固定ページではないとき。
+        if (!/\?q=|\.html$|updated-min=/i.test(thisUrl)) {  // 検索結果や固定ページやアーカイブページではないとき。
             vars.currentPageNo = (/#PageNo=/i.test(thisUrl))?/#PageNo=(\d+)/i.exec(thisUrl)[1]:1;  // URLから現在のページ番号の取得。
             var url;  // フィードを取得するためのURL。
             if (vars.postLabel) {  // 総投稿数取得のためにフィードを取得するURLの作成。ラベルインデックスのときはそのラベル名の総投稿数を取得するため。
